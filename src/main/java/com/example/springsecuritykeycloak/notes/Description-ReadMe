@@ -1,0 +1,104 @@
+====================WebSecurityConfigurerAdapter=====================
+'WebSecurityConfigurerAdapter', Spring Security çerçevesinde güvenlik yapılandırmasını kolaylaştırmak için kullanılan bir soyut sınıftır.
+Bu sınıf, Spring Security'nin yapılandırma ayarlarını değiştirmek ve özelleştirmek için kullanılabilir.
+ Uygulamamızdaki güvenlik konfigürasyonunu değiştirmek için 'WebSecurityConfigurerAdapter' sınıfını miras alarak, özel yapılandırmalar ekleyebiliriz.
+
+Bu soyut sınıf, 'WebSecurityConfigurer' arabirimini uygulamış ve ön tanımlı davranışları boş bırakmıştır.
+Dolayısıyla, bu sınıftan türeyen alt sınıflar, ihtiyaçlarına göre özelleştirilmiş yapılandırmaları sağlayabilir.
+
+'WebSecurityConfigurerAdapter' sınıfının temel görevleri şunlardır:
+
+1. 'configure(HttpSecurity http)': Bu metot, HTTP güvenlik ayarlarını yapılandırmak için kullanılır.
+Bu sayede, hangi URL'lerin koruma altına alınacağı, kimlerin erişebileceği, kimlik doğrulama ve yetkilendirme gibi güvenlik politikalarını belirleyebiliriz.
+
+2. 'configure(WebSecurity web)': Bu metot, statik kaynaklara (örneğin, CSS dosyaları, resimler, js dosyaları gibi) uygulanacak güvenlik yapılandırmalarını tanımlamak için kullanılır.
+Bu tip kaynaklar genellikle kimlik doğrulaması olmadan erişilebilir olmalıdır.
+
+3. 'userDetailsService()': Bu metot, kimlik doğrulama işlemi sırasında kullanılacak 'UserDetailsService' nesnesini belirlemek için kullanılır.
+Varsayılan olarak, bu metot kullanıcı bilgilerini hafızada (memory) saklayan basit bir kullanıcı detayları servisi döndürür.
+ Ancak, gerçek bir veritabanından kullanıcı bilgileri almak için bu metodu özelleştirerek farklı bir 'UserDetailsService' döndürebiliriz.
+
+'WebSecurityConfigurerAdapter' sınıfından türetilen alt sınıflar, belirtilen metotları override ederek, uygulamamızın güvenlik yapılandırmasını belirlememize olanak tanır.
+ Bu sayede, kimlik doğrulama, yetkilendirme, oturum yönetimi ve diğer güvenlik özelliklerini kontrol edebiliriz.
+===================================UserDetailsService===================================
+'UserDetailsService', Spring Security çerçevesinde kullanıcı kimlik doğrulama sürecini yönetmek için kullanılan bir arabirimdir.
+ Bu arabirim, Spring Security ile kullanıcıları kimlik doğrulama işlemlerine bağlamak için uygulanması gereken metodu içerir.
+
+'UserDetailsService' arabirimini uygulamak için, bir sınıfın 'loadUserByUsername' adında bir metodu override edilir.
+ Bu metot, verilen kullanıcı adına göre kullanıcı bilgilerini yüklemekle sorumludur. Bu bilgiler genellikle bir veritabanından veya harici bir kullanıcı bilgi kaynağından alınır.
+
+Spring Security, kimlik doğrulama işlemleri sırasında, kullanıcının giriş yaptığı kullanıcı adını alır ve 'UserDetailsService' aracılığıyla
+ bu kullanıcı adına uygun kullanıcı bilgilerini yükler. Bu bilgiler daha sonra kimlik doğrulama işlemi için kullanılır.
+
+İşte 'UserDetailsService' arabirimini uygulayan bir sınıfın temel işlevleri:
+
+1. 'loadUserByUsername': Bu metot, verilen kullanıcı adına göre kullanıcı bilgilerini yükler. Kullanıcı adına uygun bir kullanıcı bulunamazsa 
+genellikle 'UsernameNotFoundException' istisnası fırlatılır.
+
+2. Kullanıcı bilgileri yüklendikten sonra, bu bilgiler genellikle bir 'UserDetails' nesnesine dönüştürülür.
+ 'UserDetails', Spring Security tarafından kullanılan kullanıcı kimlik bilgilerini temsil eden bir arabirimdir.
+ Bu nesne, kullanıcının kimlik doğrulama ve yetkilendirme süreçlerinde kullanılır.
+
+3. 'UserDetails' nesnesi, kullanıcının şifresini, yetkilerini (rolleri) ve diğer kimlik doğrulama ile ilgili bilgileri içerir.
+
+4. Döndürülen 'UserDetails' nesnesi, Spring Security'nin kimlik doğrulama işlemini tamamlamak için kullanılır.
+ Kullanıcının şifresi karşılaştırılır ve yetkileri doğrulanır.
+
+Özetle, 'UserDetailsService', Spring Security'nin kullanıcı kimlik doğrulama sürecini yönetmek ve kullanıcı bilgilerini yüklemek için kullanılan önemli bir arabirimdir. 
+Uygulanan sınıf, kullanıcı adına göre uygun kullanıcı bilgilerini sağlar ve kimlik doğrulama işlemlerini gerçekleştirmek üzere bu bilgileri Spring Security'ye sunar.
+==================SimpleGrantedAuthority=======================
+'SimpleGrantedAuthority', Spring Security çerçevesi altında kullanıcıların rol ve yetkilerini temsil eden bir sınıftır.
+ Genellikle bir kullanıcının yetkilerini ifade etmek için kullanılır.
+
+Bir yetkiyi (authority) temsil eden bu sınıfın yapısı oldukça basittir. Sadece bir String (dize) değeri tutar.
+ Bu String değeri, kullanıcının sahip olduğu rolü veya yetkiyi temsil eder.
+
+Örneğin, bir kullanıcıya "ADMIN" rolü atanmışsa, bu rolü 'SimpleGrantedAuthority("ROLE_ADMIN")' şeklinde bir 'SimpleGrantedAuthority' nesnesi olarak temsil edebiliriz.
+
+Spring Security, kullanıcıların yetkilerini ve rollerini belirlemek için 'SimpleGrantedAuthority' nesnelerini kullanır. 
+Bu yetkiler, bir kullanıcının belirli bir işlemi gerçekleştirme yeteneğini veya erişim iznini gösterir. 
+Bu yetkiler, bir web sayfasını görüntüleme, bir işlemi gerçekleştirme, bir kaynağa erişim gibi çeşitli işlemleri içerebilir.
+
+Örneğin, uygulamada bir web sayfasının yönetici tarafından erişilebilir olması gerekiyorsa, bu web sayfasının kontrolü için 
+gerekli yetkiyi temsil eden bir 'SimpleGrantedAuthority' nesnesi tanımlanabilir. Sonra, Spring Security konfigürasyonu ile
+ bu yetkilere sahip kullanıcılar sayfaya erişebilirken, yetkisi olmayan kullanıcılar bu sayfaya erişmeyecektir.
+
+Kısacası, 'SimpleGrantedAuthority', kullanıcıların rol ve yetkilerini temsil eden basit bir sınıftır ve 
+Spring Security'nin kimlik doğrulama ve yetkilendirme süreçlerinde önemli bir rol oynar.
+
+==========================AuthenticationManagerBuilder===============
+AuthenticationManagerBuilder sınıfı, kimlik doğrulama yöntemlerini, kimlik bilgilerinin nasıl alınacağını ve
+kullanıcının rollerini belirlemek için kullanıcı detaylarının nasıl alınacağını yapılandırmak için kullanılır.
+Bu yapılandırmalar, uygulamanızdaki güvenlik politikalarını belirlemenize ve kullanıcıların doğru kimlik bilgilerini
+sağladığından emin olmanıza olanak tanır.
+
+Örneğin, kullanıcıların kimlik doğrulaması için uygulamanızın bir veritabanına ihtiyacı olabilir.
+Bu durumda, AuthenticationManagerBuilder kullanıcıları veritabanından alacak bir UserDetailsService ile yapılandırılabilir.
+Aynı zamanda, şifreleri güvenli bir şekilde saklamak için BCryptPasswordEncoder gibi bir PasswordEncoder da belirtilebilir.
+
+İşte Örnek kullanım
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        // Kullanıcı detaylarını veritabanından alacak olan servisi belirtiyoruz
+        auth.userDetailsService(userDetailsService)
+            // Şifreleri BCrypt algoritmasıyla şifrelemek için bir password encoder belirtiyoruz
+            .passwordEncoder(passwordEncoder());
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}
+
+Bu yapılandırmadan sonra, Spring Security uygulamanızı, kullanıcıları veritabanından alarak ve şifreleri güvenli
+bir şekilde doğrulayarak kimlik doğrulama işlemlerini yönetebilir.
+Ayrıca, kullanıcılara verilen rolleri belirlemek için UserDetailsService uygulamanızdan gelen verilere göre kullanılacaktır.
+Bu şekilde, uygulamanızın güvenliği artar ve yetkisiz erişimler engellenir.
+
+
+
