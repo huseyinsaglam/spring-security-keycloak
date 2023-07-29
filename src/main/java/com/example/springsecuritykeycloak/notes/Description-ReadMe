@@ -1,3 +1,7 @@
+====================EnableWebSecurity=====================
+@EnableWebSecurity, Spring Security konfigürasyonunu etkinleştiren bir anotasyondur.
+Bu anotasyon, Spring tabanlı web uygulamalarında güvenlik özelliklerini yapılandırmak ve etkinleştirmek için kullanılır.
+
 ====================WebSecurityConfigurerAdapter=====================
 'WebSecurityConfigurerAdapter', Spring Security çerçevesinde güvenlik yapılandırmasını kolaylaştırmak için kullanılan bir soyut sınıftır.
 Bu sınıf, Spring Security'nin yapılandırma ayarlarını değiştirmek ve özelleştirmek için kullanılabilir.
@@ -99,6 +103,25 @@ Bu yapılandırmadan sonra, Spring Security uygulamanızı, kullanıcıları ver
 bir şekilde doğrulayarak kimlik doğrulama işlemlerini yönetebilir.
 Ayrıca, kullanıcılara verilen rolleri belirlemek için UserDetailsService uygulamanızdan gelen verilere göre kullanılacaktır.
 Bu şekilde, uygulamanızın güvenliği artar ve yetkisiz erişimler engellenir.
+
+===================PreAuthorize==========================================
+İlk olarak, Spring Security konfigürasyonunu uygulamanızda aktifleştirmeniz gerekmektedir.
+Bunun için bir yapılandırma sınıfı oluşturabilirsiniz.
+@EnableGlobalMethodSecurity(prePostEnabled = true) // Bu satır ile metot düzeyinde yetkilendirme aktif hale getirilir.
+
+
+@PreAuthorize Spring Security anotasyonu, Spring tabanlı uygulamalarda güvenlik yetkilendirmelerini yönetmek için kullanılır.
+Bu anotasyon, metotların ya da Controller sınıflarının üzerine yerleştirilir ve o metotların veya sınıfların,
+belirtilen yetkilere sahip kullanıcılar tarafından erişimine izin verir.
+
+hasAuthority() fonksiyonu, kullanıcının belirtilen yetkiye (authority) sahip olup olmadığını kontrol eder.
+Yetki (authority) genellikle bir role (rol) ya da rol bazlı bir yapıdaki bir izin grubunu ifade eder.
+Örneğin, "PROFESSOR" yetkisi bir öğretmen rolünü ifade edebilir.
+
+Birden fazla izin vermek icin asadaki tanim kullanilmalidir
+@PreAuthorize("hasAuthority('PROFESSOR') or hasAuthority('STUDENT')")
+
+
 
 
 
