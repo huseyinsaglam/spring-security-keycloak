@@ -19,6 +19,8 @@
 <body>
 <div class="container">
   <h2 class="form-signin-heading">Welcome <span th:text = "${#authentication.getPrincipal().getUsername()}"></span></h2>
+
+  <a href="/logout">Logout</a>
 </div>
 </body>
 </html>

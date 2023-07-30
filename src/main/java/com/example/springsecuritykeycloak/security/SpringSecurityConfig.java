@@ -26,7 +26,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		.and().csrf().disable()
 				.headers().frameOptions().sameOrigin().and()
 		.formLogin().loginPage("/login")
-		.defaultSuccessUrl("/home");
+				.defaultSuccessUrl("/home")
+				.usernameParameter("username")
+				.passwordParameter("password")
+				.and().exceptionHandling().
+					accessDeniedPage("/access-denied") // Yetkilendirme hatası durumunda "/access-denied" sayfasına yönlendirir.
+				.and().
+				logout().
+					logoutUrl("/logout")// Çıkış işlemini "/logout" URL'sine yönlendir
+					.logoutSuccessUrl("/login"); // Çıkış başarılıysa "/login" sayfasına yönlendir
 
 	}
 
